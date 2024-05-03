@@ -9,30 +9,90 @@ Assignement 4: add content to the following tests
 describe('Section 1: Functional tests', () => {
 
     it('User can use only same both first and validation passwords', ()=>{
-        // Add test steps for filling in only mandatory fields
-        // Type confirmation password which is different from first password
-        // Assert that submit button is not enabled
-        // Assert that successful message is not visible
-        // Assert that error message is visible
-        // Change the test, so the passwords would match
-        // Add assertion, that error message is not visible anymore
-        // Add assertion, that submit button is now enabled
+        cy.get('#username').type('Maiakene')
+        cy.get('#email').type('maia@testing.com')
+        cy.get('[data-cy="name"]').type('Maia')
+        cy.get('#lastName').type('Testing')
+        cy.get('[data-testid="phoneNumberTestId"]').type('56567234')
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').type('passpass')
+        cy.get('h2').contains('Password').click()
+        cy.get('.submit_button').should('be.disabled')
+        cy.get('#success_message').should('not.be.visible')
+        cy.get('#password_error_message').should('be.visible').should('contain', 'Passwords do not match!')
+        cy.get('input[name="password"]').clear()
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').clear()
+        cy.get('[name="confirm"]').type('p455p455')
+        cy.get('h2').contains('Password').click()
+        cy.get('#password_error_message').should('not.be.visible')
+        cy.get('.submit_button').should('be.enabled')
     })
     
     it('User can submit form with all fields added', ()=>{
-        // Add test steps for filling in ALL fields
-        // Assert that submit button is enabled
-        // Assert that after submitting the form system show successful message
+        cy.get('#username').type('Maiakene')
+        cy.get('#email').type('maia@testing.com')
+        cy.get('[data-cy="name"]').type('Maia')
+        cy.get('#lastName').type('Testing')
+        cy.get('[data-testid="phoneNumberTestId"]').type('56567234')
+        cy.get('[type="radio"]').check('JavaScript')
+        cy.get('[type="checkbox"]').check('Car')
+        cy.get('#cars').select('audi')
+        cy.get('#animal').select('dog')
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').type('p455p455')
+        cy.get('h2').contains('Password').click()
+        cy.get('.submit_button').should('be.enabled')
+        cy.get('.submit_button').click()
+        cy.get('#success_message').should('be.visible')
     })
 
     it('User can submit form with valid data and only mandatory fields added', ()=>{
-        // Add test steps for filling in ONLY mandatory fields
-        // Assert that submit button is enabled
-        // Assert that after submitting the form system shows successful message
+        cy.get('#username').type('Maiakene')
+        cy.get('#email').type('maia@testing.com')
+        cy.get('[data-cy="name"]').type('Maia')
+        cy.get('#lastName').type('Testing')
+        cy.get('[data-testid="phoneNumberTestId"]').type('56567234')
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').type('p455p455')
+        cy.get('h2').contains('Password').click()
+        cy.get('.submit_button').should('be.enabled')
+        cy.get('.submit_button').click()
+        cy.get('#success_message').should('be.visible')
 
         // example, how to use function, which fills in all mandatory data
         // in order to see the content of the function, scroll to the end of the file
         inputValidData('johnDoe')
+    })
+
+    it('User cannot submit the form when the email address is absent', ()=>{
+        cy.get('#username').type('Maiakene')
+        cy.get('[data-cy="name"]').type('Maia')
+        cy.get('#lastName').type('Testing')
+        cy.get('[data-testid="phoneNumberTestId"]').type('56567234')
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').type('p455p455')
+        cy.get('h2').contains('Password').click()
+        cy.get('.submit_button').should('be.disabled')
+        cy.get('#success_message').should('not.be.visible')
+        cy.get('input[name="email"]').should('have.attr', 'title').should('contain', 'Add email')
+        cy.get('#input_error_message').should('be.visible').should('contain', 'Mandatory input field is not valid or empty!')
+        // This test has failed, because the error message is not visible (in the elements it is display: none) and when I try manually, it doesn't appear too, did I find a bug?
+    })
+
+    it('User cannot submit the form when the last name is absent', ()=>{
+        cy.get('#username').type('Maiakene')
+        cy.get('#email').type('maia@testing.com')
+        cy.get('[data-cy="name"]').type('Maia')
+        cy.get('[data-testid="phoneNumberTestId"]').type('56567234')
+        cy.get('input[name="password"]').type('p455p455')
+        cy.get('[name="confirm"]').type('p455p455')
+        cy.get('h2').contains('Password').click()
+        cy.get('.submit_button').should('be.disabled')
+        cy.get('#success_message').should('not.be.visible')
+        cy.get('input[name="lastName"]').should('have.attr', 'title').should('contain', 'Add last name')
+        cy.get('#input_error_message').should('be.visible').should('contain', 'Mandatory input field is not valid or empty!')
+        // This test has failed, because the error message is not visible (in the elements it is display: none) and when I try manually, it doesn't appear too, did I find a bug?
     })
 
     // Add at least 1 test for checking some mandatory field's absence
